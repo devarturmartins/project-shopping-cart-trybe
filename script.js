@@ -77,12 +77,24 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+const cartItemClickListener = () => {
+  const itemCarrinho = document.getElementsByClassName('cart__item');
+  for (const item of itemCarrinho) {
+    const pai = item.parentNode;
+    pai.removeChild(item);
+  }
+  console.log(itemCarrinho);
+  // const pai = itemCarrinho.parentNode;
+
+  // console.log(pai);
+  // pai.removeChild(itemCarrinho);
+};
 
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 };
 const addProduct = async (idProduto) => {
