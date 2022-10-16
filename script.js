@@ -1,6 +1,8 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const { fetchItem } = require("./helpers/fetchItem");
+
 //  const { fetchProducts } = require("./helpers/fetchProducts");
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
@@ -75,12 +77,32 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
+
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 };
+const addProduct = async (idProduto) => {
+  const dadosProduto = await fetchItem(idProduto);
+  const pai = document.querySelector('.cart__items');
+  const filho = createCartItemElement(dadosProduto);
+  pai.appendChild(filho);
+};
 
-window.onload = () => { };
+const btnCarrinho = document.getElementsByClassName('item__add');
+const addCarrinho = () => {
+  for (const btn of btnCarrinho) {
+    btn.addEventListener('click', () => {
+      const pai = btn.parentNode;
+      const filhoId = pai.firstChild;
+      const id = filhoId.textContent;
+      addProduct(id);
+    });
+  }
+};
+window.onload = () => { 
+  addCarrinho();
+};
