@@ -1,6 +1,14 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const getSavedCartItems = require("./helpers/getSavedCartItems");
+
+// const getSavedCartItems = require("./helpers/getSavedCartItems");
+
+// const saveCartItems = require("./helpers/saveCartItems");
+
+// const saveCartItems = require("./helpers/saveCartItems");
+
 // const { fetchItem } = require("./helpers/fetchItem");
 
 //  const { fetchProducts } = require("./helpers/fetchProducts");
@@ -41,7 +49,57 @@ const createCustomElement = (element, className, innerText) => {
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
+ const functionSaveCartItems = () => {
+  const item = document.getElementsByClassName('cart__item');
+  const array = [];
+  for (const itens of item) {
+    const value = itens.textContent;
+    array.push(value);
+  }
+  saveCartItems(array);
+};
+ const cartItemClickListener = (event) => {
+  event.target.remove();
+  functionSaveCartItems();
+};
+ const createCartItemElement = ({ id, title, price }) => {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  // cartItemClickListener();
+  return li;
+};
 
+ const addProduct = async (event) => {
+  const pai = event.target.parentNode;
+  const idFirstChild = pai.firstChild.innerText;
+  const dadosProduto = await fetchItem(idFirstChild);
+  const pai2 = document.querySelector('.cart__items');
+  const filho = createCartItemElement(dadosProduto);
+  pai2.appendChild(filho);
+  functionSaveCartItems();
+};
+
+const recuperaLocalStorage = () => {
+  const pai = document.querySelector('.cart__items');
+  const storage = getSavedCartItems();
+  const storageArray = JSON.parse(storage);
+  console.log(storageArray);
+  storageArray.forEach((itens) => {
+    const li = document.createElement('li');
+    li.className = '.cart__item';
+    li.innerText = itens;
+    pai.appendChild(li);
+    li.addEventListener('click', cartItemClickListener);
+  });
+};
+
+//  const addCarrinho = (event) => {
+//   const pai = event.target.parentNode;
+//   const idFirstChild = pai.firstChild.innerText;
+//   addProduct(idFirstChild);
+// };
 const createProductItemElement = ({ id, title, thumbnail }) => {
   const section = document.createElement('section');
   section.className = 'item';
@@ -50,6 +108,9 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+
+  const btnCarrinho = document.querySelectorAll('.item__add');
+  btnCarrinho.forEach((el) => el.addEventListener('click', addProduct));
 
   return section;
 };
@@ -61,7 +122,7 @@ const adicionaObjetosNoHTML = async (product) => {
     pai.appendChild(filho);
   });
 };
-  adicionaObjetosNoHTML('computador');
+
 /**
  * Função que recupera o ID do produto passado como parâmetro.
  * @param {Element} product - Elemento do produto.
@@ -78,36 +139,24 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
  * @returns {Element} Elemento de um item do carrinho.
  */
 
-const cartItemClickListener = (event) => {
-  event.target.remove();
-};
+// const btnCarrinho = document.getElementsByClassName('item__add');
+// const addCarrinho = () => {
+//   for (const btn of btnCarrinho) {
+//     btn.addEventListener('click', () => {
+//       const pai = btn.parentNode;
+//       const filhoId = pai.firstChild;
+//       const id = filhoId.textContent;
+//       addProduct(id);
+//     });
+//   }
+// };
 
-const createCartItemElement = ({ id, title, price }) => {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
-  // cartItemClickListener();
-  return li;
-};
-const addProduct = async (idProduto) => {
-  const dadosProduto = await fetchItem(idProduto);
-  const pai = document.querySelector('.cart__items');
-  const filho = createCartItemElement(dadosProduto);
-  pai.appendChild(filho);
-};
-
-const btnCarrinho = document.getElementsByClassName('item__add');
-const addCarrinho = () => {
-  for (const btn of btnCarrinho) {
-    btn.addEventListener('click', () => {
-      const pai = btn.parentNode;
-      const filhoId = pai.firstChild;
-      const id = filhoId.textContent;
-      addProduct(id);
-    });
-  }
-};
 window.onload = () => { 
-  addCarrinho();
+  adicionaObjetosNoHTML('computador');
+  const aaa = JSON.parse(getSavedCartItems());
+  if (aaa) {
+    recuperaLocalStorage();
+  }
+  // recuperaLocalStorage();
+  // functionSaveCartItems();
 };
