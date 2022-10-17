@@ -79,13 +79,14 @@ const createCustomElement = (element, className, innerText) => {
   const filho = createCartItemElement(dadosProduto);
   pai2.appendChild(filho);
   functionSaveCartItems();
+  price(idFirstChild);
 };
 
 const recuperaLocalStorage = () => {
   const pai = document.querySelector('.cart__items');
   const storage = getSavedCartItems();
   const storageArray = JSON.parse(storage);
-  console.log(storageArray);
+  // console.log(storageArray);
   storageArray.forEach((itens) => {
     const li = document.createElement('li');
     li.className = '.cart__item';
@@ -150,7 +151,23 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
 //     });
 //   }
 // };
-
+const price = async (id) => {
+  // const preco = document.querySelectorAll('.cart__item');
+  let valorInicial = 0;
+  // const array = [];
+  // preco.forEach((produto) => {
+  //   const stringPreco = produto.innerText.split(' | ');
+  //   const number = stringPreco.replace(/[^0-9]/g, '');
+  //   console.log(number);
+  //   array.push(stringPreco[2]);
+  // });
+  const a = await fetchItem(id);
+  const priceProduct = a.price;
+  valorInicial += priceProduct;
+  // array.push(priceProduct);
+  console.log(valorInicial);
+};
+// price();
 window.onload = () => { 
   adicionaObjetosNoHTML('computador');
   const aaa = JSON.parse(getSavedCartItems());
