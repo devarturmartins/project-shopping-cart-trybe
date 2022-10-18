@@ -50,17 +50,30 @@ const createCustomElement = (element, className, innerText) => {
  * @returns {Element} Elemento de produto.
  */
  const functionSaveCartItems = () => {
-  const item = document.getElementsByClassName('cart__item');
-  const array = [];
+  const item = document.querySelectorAll('.cart__item');
+  let array = [];
   for (const itens of item) {
-    const value = itens.textContent;
+    const value = itens.innerText;
     array.push(value);
   }
   saveCartItems(array);
+  array = [];
 };
+const price = () => {
+  const preco = document.querySelectorAll('.cart__item');
+  console.log(preco);
+  const array = [];
+  preco.forEach((e) => array.push(e));
+  const precoTotal = array.reduce((acc, curr) => acc + Number(curr.innerText.split('$')[1]), 0);
+  // console.log(precoTotal);
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = `Valor total: $ ${precoTotal}`;
+};
+
  const cartItemClickListener = (event) => {
   event.target.remove();
   functionSaveCartItems();
+  price();
 };
  const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
@@ -79,7 +92,7 @@ const createCustomElement = (element, className, innerText) => {
   const filho = createCartItemElement(dadosProduto);
   pai2.appendChild(filho);
   functionSaveCartItems();
-  price(idFirstChild);
+  price();
 };
 
 const recuperaLocalStorage = () => {
@@ -89,11 +102,12 @@ const recuperaLocalStorage = () => {
   // console.log(storageArray);
   storageArray.forEach((itens) => {
     const li = document.createElement('li');
-    li.className = '.cart__item';
+    li.className = 'cart__item';
     li.innerText = itens;
     pai.appendChild(li);
     li.addEventListener('click', cartItemClickListener);
   });
+  price();
 };
 
 //  const addCarrinho = (event) => {
@@ -151,23 +165,21 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
 //     });
 //   }
 // };
-const price = async (id) => {
-  // const preco = document.querySelectorAll('.cart__item');
-  let valorInicial = 0;
-  // const array = [];
-  // preco.forEach((produto) => {
-  //   const stringPreco = produto.innerText.split(' | ');
-  //   const number = stringPreco.replace(/[^0-9]/g, '');
-  //   console.log(number);
-  //   array.push(stringPreco[2]);
-  // });
-  const a = await fetchItem(id);
-  const priceProduct = a.price;
-  valorInicial += priceProduct;
-  // array.push(priceProduct);
-  console.log(valorInicial);
-};
+
 // price();
+
+const clear = () => {
+  const esvaziar = document.querySelector('.empty-cart');
+  esvaziar.addEventListener('click', () => {
+    const itens = document.querySelectorAll('.cart__item');
+    itens.forEach((e) => {
+      e.remove();
+    });
+    functionSaveCartItems();
+    price();
+  });
+};
+clear();
 window.onload = () => { 
   adicionaObjetosNoHTML('computador');
   const aaa = JSON.parse(getSavedCartItems());
