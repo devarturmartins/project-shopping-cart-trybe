@@ -50,7 +50,7 @@ const createCustomElement = (element, className, innerText) => {
  * @returns {Element} Elemento de produto.
  */
  const functionSaveCartItems = () => {
-  const item = document.querySelectorAll('.cart__item');
+  const item = document.getElementsByClassName('cart__item');
   let array = [];
   for (const itens of item) {
     const value = itens.innerText;
@@ -59,7 +59,7 @@ const createCustomElement = (element, className, innerText) => {
   saveCartItems(array);
   array = [];
 };
-const price = () => {
+const pricess = () => {
   const preco = document.querySelectorAll('.cart__item');
   console.log(preco);
   const array = [];
@@ -73,7 +73,7 @@ const price = () => {
  const cartItemClickListener = (event) => {
   event.target.remove();
   functionSaveCartItems();
-  price();
+  pricess();
 };
  const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
@@ -92,7 +92,7 @@ const price = () => {
   const filho = createCartItemElement(dadosProduto);
   pai2.appendChild(filho);
   functionSaveCartItems();
-  price();
+  pricess();
 };
 
 const recuperaLocalStorage = () => {
@@ -107,7 +107,7 @@ const recuperaLocalStorage = () => {
     pai.appendChild(li);
     li.addEventListener('click', cartItemClickListener);
   });
-  price();
+  pricess();
 };
 
 //  const addCarrinho = (event) => {
@@ -176,7 +176,7 @@ const clear = () => {
       e.remove();
     });
     functionSaveCartItems();
-    price();
+    pricess();
   });
 };
 clear();
