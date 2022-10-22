@@ -126,8 +126,19 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
 
   const btnCarrinho = document.querySelectorAll('.item__add');
   btnCarrinho.forEach((el) => el.addEventListener('click', addProduct));
-
   return section;
+};
+const load = () => {
+  const body = document.querySelector('.items');
+  const carregando = document.createElement('p');
+  carregando.className = 'loading';
+  carregando.innerText = 'Carregando...';
+  body.appendChild(carregando);
+};
+
+const removeLoad = () => {
+  const carregando = document.querySelector('.loading');
+  carregando.remove();
 };
 const adicionaObjetosNoHTML = async (product) => {
   const object = await fetchProducts(product);
@@ -136,6 +147,7 @@ const adicionaObjetosNoHTML = async (product) => {
     const filho = createProductItemElement(produto);
     pai.appendChild(filho);
   });
+  removeLoad();
 };
 
 /**
@@ -179,9 +191,12 @@ const clear = () => {
     pricess();
   });
 };
+
 clear();
 window.onload = () => { 
+  load();
   adicionaObjetosNoHTML('computador');
+  // removeLoad();
   const aaa = JSON.parse(getSavedCartItems());
   if (aaa) {
     recuperaLocalStorage();
